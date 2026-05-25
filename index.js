@@ -1,5 +1,64 @@
 require('dotenv').config();
 
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers
+  ]
+});
+
+client.once('ready', () => {
+  console.log(`✅ 已登入 ${client.user.tag}`);
+});
+
+client.on('guildMemberAdd', member => {
+
+  const channel = member.guild.channels.cache.find(
+    ch => ch.name === '歡迎welcome'
+  );
+
+  if (!channel) return;
+
+  // 🎲 隨機歡迎語
+  const welcomeMessages = [
+    `🏮 ${member} 少俠降臨，《劍來》再添一猛將！`,
+    `⚔️ ${member} 已踏入《劍來》，風雲再起！`,
+    `🔥 ${member} 加入《劍來》，準備開殺！`,
+    `🌙 歡迎 ${member}，願你刀光不斷、名震四方！`,
+    `🎴 ${member} 已入《劍來》，命運齒輪開始轉動！`
+  ];
+
+  const randomMessage =
+    welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+
+  // 👑 顯示第幾位成員
+  /*const memberCount = member.guild.memberCount;*/
+
+  // 🧩 自動給身分組
+  /*const role = member.guild.roles.cache.find(r => r.name === '新手');
+  if (role) {
+    member.roles.add(role).catch(console.error);
+  }*/
+
+  // 🎴 Embed 卡片
+  const embed = new EmbedBuilder()
+    .setColor('#FFD700')
+    .setTitle('🏮 歡迎少俠踏入燕雲江湖')
+    .setDescription(randomMessage)
+    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+    .setImage('C:\\Users\\kelvi\\OneDrive\\图片\\background.png') // ← 換成你的背景圖
+    .setFooter({ text: `劍來之處 · 無人敢擋` })
+    .setTimestamp();
+
+  channel.send({ embeds: [embed] });
+});
+
+client.login(process.env.TOKEN);
+
+/*require('dotenv').config();
+
 const {
   Client,
   GatewayIntentBits
@@ -33,4 +92,12 @@ client.on('guildMemberAdd', member => {
   );
 });
 
-client.login(process.env.TOKEN);
+client.login(process.env.TOKEN);*/
+
+/* RUN THIS IN TERMINAL TO PUSH TO GITHUB  
+
+git remote add origin https://github.com/kkwh99/hongxian-bot.git
+git branch -M main
+git push -u origin main
+
+*/
