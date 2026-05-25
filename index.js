@@ -137,7 +137,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#FFD700';
-  ctx.font = 'bold 42px sans-serif';
+  ctx.font = 'bold 42px Arial';
   ctx.fillText(
     '劍來之處 · 無人能擋',
     300,
@@ -149,7 +149,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 50px sans-serif';
+  ctx.font = 'bold 50px Arial';
 
   ctx.fillText(
     member.user.username,
@@ -162,7 +162,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#DDDDDD';
-  ctx.font = '32px sans-serif';
+  ctx.font = '32px Arial';
 
   ctx.fillText(
     randomMessage,
@@ -175,7 +175,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#AAAAAA';
-  ctx.font = '26px sans-serif';
+  ctx.font = '26px Arial';
 
   ctx.fillText(
     `第 ${memberCount} 位少東家`,
