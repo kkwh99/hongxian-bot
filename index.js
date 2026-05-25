@@ -15,11 +15,10 @@ client.once('ready', () => {
 
 client.on('guildMemberAdd', member => {
 
-  const channel = member.guild.channels.cache.find(
-    ch => ch.name === '歡迎welcome'
-  );
+  const channel = member.guild.channels.cache.get('1508382356505886873');
 
   if (!channel) return;
+  if (member.user.bot) return;
 
   // 🎲 隨機歡迎語
   const welcomeMessages = [
@@ -47,8 +46,8 @@ client.on('guildMemberAdd', member => {
     .setColor('#FFD700')
     .setTitle('🏮 歡迎少俠踏入燕雲江湖')
     .setDescription(randomMessage)
-    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-    .setImage('C:\\Users\\kelvi\\OneDrive\\图片\\background.png') // ← 換成你的背景圖
+    .setThumbnail(member.user.displayAvatarURL({ extension: 'png', size: 256 }))
+    .setImage('https://cdn.discordapp.com/attachments/1440096614373920879/1508442384210333747/background.png?ex=6a158df1&is=6a143c71&hm=7794eeefe679ad2e0c22189a162d3c2b1ccf9015b05389dfd02cc594bb9659d2&') // ← 換成你的背景圖
     .setFooter({ text: `劍來之處 · 無人敢擋` })
     .setTimestamp();
 
