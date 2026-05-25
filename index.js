@@ -81,12 +81,13 @@ client.on('guildMemberAdd', async (member) => {
   // 👤 Avatar 圓形裁切
   // =========================
 
-  const avatar = await loadImage(
-    member.user.displayAvatarURL({
-      extension: 'png',
-      size: 256
-    })
-  );
+  const avatarURL = member.user.displayAvatarURL({
+    forceStatic: true,
+    extension: 'png',
+    size: 256
+  });
+
+  const avatar = await loadImage(avatarURL);
 
   const avatarX = 70;
   const avatarY = 100;
@@ -148,7 +149,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 50px Microsoft JhengHei';
+  ctx.font = 'bold 50px sans-serif';
 
   ctx.fillText(
     member.user.username,
@@ -161,7 +162,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#DDDDDD';
-  ctx.font = '32px Microsoft JhengHei';
+  ctx.font = '32px sans-serif';
 
   ctx.fillText(
     randomMessage,
@@ -174,7 +175,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#AAAAAA';
-  ctx.font = '26px Microsoft JhengHei';
+  ctx.font = '26px sans-serif';
 
   ctx.fillText(
     `第 ${memberCount} 位少東家`,
