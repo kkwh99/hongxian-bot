@@ -68,7 +68,7 @@ client.on('guildMemberAdd', async (member) => {
 
   // 🖼️ 背景圖
   const background = await loadImage(
-    'https://imgur.com/a/hKHjnQm'
+    'https://imgur.com/pOtzCRT.png'
   );
 
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
