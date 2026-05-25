@@ -74,8 +74,11 @@ client.on('guildMemberAdd', async (member) => {
   ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
 
   // 🌑 黑色半透明 Overlay
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+  /*ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+  */
+  ctx.fillStyle = 'red';
+  ctx.fillRect(300, 200, 300, 100);
 
   // =========================
   // 👤 Avatar 圓形裁切
@@ -138,6 +141,7 @@ client.on('guildMemberAdd', async (member) => {
 
   ctx.fillStyle = '#FFD700';
   ctx.font = 'bold 42px Arial';
+  ctx.textBaseline = 'top';
   ctx.fillText(
     '劍來之處 · 無人能擋',
     300,
@@ -150,6 +154,7 @@ client.on('guildMemberAdd', async (member) => {
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = 'bold 50px Arial';
+  ctx.textBaseline = 'top';
 
   ctx.fillText(
     member.user.username,
@@ -163,7 +168,7 @@ client.on('guildMemberAdd', async (member) => {
 
   ctx.fillStyle = '#DDDDDD';
   ctx.font = '32px Arial';
-
+  ctx.textBaseline = 'top';
   ctx.fillText(
     randomMessage,
     300,
@@ -176,7 +181,7 @@ client.on('guildMemberAdd', async (member) => {
 
   ctx.fillStyle = '#AAAAAA';
   ctx.font = '26px Arial';
-
+  ctx.textBaseline = 'top';
   ctx.fillText(
     `第 ${memberCount} 位少東家`,
     300,
