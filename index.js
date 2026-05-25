@@ -136,7 +136,7 @@ client.on('guildMemberAdd', async (member) => {
   // =========================
 
   ctx.fillStyle = '#FFD700';
-  ctx.font = 'bold 42px Microsoft JhengHei';
+  ctx.font = 'bold 42px sans-serif';
   ctx.fillText(
     '劍來之處 · 無人能擋',
     300,
