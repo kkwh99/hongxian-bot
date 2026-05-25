@@ -1,0 +1,57 @@
+require('dotenv').config();
+
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers
+  ]
+});
+
+client.once('ready', () => {
+  console.log(`✅ 已登入 ${client.user.tag}`);
+});
+
+client.on('guildMemberAdd', member => {
+
+  const channel = member.guild.channels.cache.get('1508382356505886873');
+
+  if (!channel) return;
+  if (member.user.bot) return;
+
+  // 🎲 隨機歡迎語
+  const welcomeMessages = [
+    `🏮 ${member} 少俠降臨，《劍來》再添一猛將！`,
+    `⚔️ ${member} 已踏入《劍來》，風雲再起！`,
+    `🔥 ${member} 加入《劍來》，準備開殺！`,
+    `🌙 歡迎 ${member}，願你刀光不斷、名震四方！`,
+    `🎴 ${member} 已入《劍來》，命運齒輪開始轉動！`
+  ];
+
+  const randomMessage =
+    welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+
+  // 👑 顯示第幾位成員
+  /*const memberCount = member.guild.memberCount;*/
+
+  // 🧩 自動給身分組
+  /*const role = member.guild.roles.cache.find(r => r.name === '新手');
+  if (role) {
+    member.roles.add(role).catch(console.error);
+  }*/
+
+  // 🎴 Embed 卡片
+  const embed = new EmbedBuilder()
+    .setColor('#FFD700')
+    .setTitle('🏮 歡迎少俠踏入燕雲江湖')
+    .setDescription(randomMessage)
+    .setThumbnail(member.user.displayAvatarURL({ extension: 'png', size: 256 }))
+    .setImage('https://cdn.discordapp.com/attachments/1440096614373920879/1508442384210333747/background.png?ex=6a158df1&is=6a143c71&hm=7794eeefe679ad2e0c22189a162d3c2b1ccf9015b05389dfd02cc594bb9659d2&') // ← 換成你的背景圖
+    .setFooter({ text: `劍來之處 · 無人敢擋` })
+    .setTimestamp();
+
+  channel.send({ embeds: [embed] });
+});
+
+client.login(process.env.TOKEN); 

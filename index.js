@@ -1,6 +1,15 @@
 require('dotenv').config();
 
-const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const {
+  Client,
+  GatewayIntentBits,
+  AttachmentBuilder
+} = require('discord.js');
+
+const {
+  createCanvas,
+  loadImage
+} = require('@napi-rs/canvas');
 
 const client = new Client({
   intents: [
@@ -13,92 +22,192 @@ client.once('ready', () => {
   console.log(`✅ 已登入 ${client.user.tag}`);
 });
 
-client.on('guildMemberAdd', member => {
+client.on('guildMemberAdd', async (member) => {
 
+  // ❌ 避免 bot 觸發
+  if (member.user.bot) return;
+
+  // 📢 歡迎頻道
   const channel = member.guild.channels.cache.get('1508382356505886873');
 
   if (!channel) return;
-  if (member.user.bot) return;
 
   // 🎲 隨機歡迎語
   const welcomeMessages = [
-    `🏮 ${member} 少俠降臨，《劍來》再添一猛將！`,
-    `⚔️ ${member} 已踏入《劍來》，風雲再起！`,
-    `🔥 ${member} 加入《劍來》，準備開殺！`,
-    `🌙 歡迎 ${member}，願你刀光不斷、名震四方！`,
-    `🎴 ${member} 已入《劍來》，命運齒輪開始轉動！`
+    `踏入劍來 風雲再起`,
+    `江湖路遠　劍來同行`,
+    `劍來之人　不懼風雨`,
+    `今日入劍來　此生皆同袍`,
+    `劍來再添一名江湖俠客`
   ];
 
   const randomMessage =
     welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
 
-  // 👑 顯示第幾位成員
-  /*const memberCount = member.guild.memberCount;*/
+  // 👥 成員數
+  const memberCount = member.guild.memberCount;
 
-  // 🧩 自動給身分組
-  /*const role = member.guild.roles.cache.find(r => r.name === '新手');
+  /*
+  // 🎭 自動身分組
+  const role = member.guild.roles.cache.find(
+    r => r.name === '新手'
+  );
+
   if (role) {
     member.roles.add(role).catch(console.error);
-  }*/
+  }
+  */
+  
+  // =========================
+  // 🎨 開始生成歡迎卡
+  // =========================
 
-  // 🎴 Embed 卡片
-  const embed = new EmbedBuilder()
-    .setColor('#FFD700')
-    .setTitle('🏮 歡迎少俠踏入燕雲江湖')
-    .setDescription(randomMessage)
-    .setThumbnail(member.user.displayAvatarURL({ extension: 'png', size: 256 }))
-    .setImage('https://cdn.discordapp.com/attachments/1440096614373920879/1508442384210333747/background.png?ex=6a158df1&is=6a143c71&hm=7794eeefe679ad2e0c22189a162d3c2b1ccf9015b05389dfd02cc594bb9659d2&') // ← 換成你的背景圖
-    .setFooter({ text: `劍來之處 · 無人敢擋` })
-    .setTimestamp();
+  // 📏 卡片大小
+  const canvas = createCanvas(1000, 400);
+  const ctx = canvas.getContext('2d');
 
-  channel.send({ embeds: [embed] });
+  // 🖼️ 背景圖
+  const background = await loadImage(
+    'https://cdn.discordapp.com/attachments/1440096614373920879/1508442384210333747/background.png?ex=6a158df1&is=6a143c71&hm=7794eeefe679ad2e0c22189a162d3c2b1ccf9015b05389dfd02cc594bb9659d2&'
+  );
+
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+  // 🌑 黑色半透明 Overlay
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // =========================
+  // 👤 Avatar 圓形裁切
+  // =========================
+
+  const avatar = await loadImage(
+    member.user.displayAvatarURL({
+      extension: 'png',
+      size: 256
+    })
+  );
+
+  const avatarX = 70;
+  const avatarY = 100;
+  const avatarSize = 180;
+
+  ctx.save();
+
+  ctx.beginPath();
+  ctx.arc(
+    avatarX + avatarSize / 2,
+    avatarY + avatarSize / 2,
+    avatarSize / 2,
+    0,
+    Math.PI * 2,
+    true
+  );
+
+  ctx.closePath();
+  ctx.clip();
+
+  ctx.drawImage(
+    avatar,
+    avatarX,
+    avatarY,
+    avatarSize,
+    avatarSize
+  );
+
+  ctx.restore();
+
+  // 🟡 金色外框
+  ctx.beginPath();
+  ctx.arc(
+    avatarX + avatarSize / 2,
+    avatarY + avatarSize / 2,
+    avatarSize / 2 + 5,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.strokeStyle = '#FFD700';
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  // =========================
+  // 🏮 標題
+  // =========================
+
+  ctx.fillStyle = '#FFD700';
+  ctx.font = 'bold 42px Microsoft JhengHei';
+  ctx.fillText(
+    '劍來之處 · 無人能擋',
+    300,
+    120
+  );
+
+  // =========================
+  // ⚔️ 使用者名稱
+  // =========================
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 50px Microsoft JhengHei';
+
+  ctx.fillText(
+    member.user.username,
+    300,
+    200
+  );
+
+  // =========================
+  // 📝 隨機歡迎語
+  // =========================
+
+  ctx.fillStyle = '#DDDDDD';
+  ctx.font = '32px Microsoft JhengHei';
+
+  ctx.fillText(
+    randomMessage,
+    300,
+    260
+  );
+
+  // =========================
+  // 👥 成員數
+  // =========================
+
+  ctx.fillStyle = '#AAAAAA';
+  ctx.font = '26px Microsoft JhengHei';
+
+  ctx.fillText(
+    `第 ${memberCount} 位少東家`,
+    300,
+    320
+  );
+
+  // =========================
+  // 📦 輸出圖片
+  // =========================
+
+  const attachment = new AttachmentBuilder(
+    await canvas.encode('png'),
+    { name: 'welcome-card.png' }
+  );
+
+  // 📤 發送卡片
+  channel.send({
+    content: `🏮 歡迎 ${member} 加入《劍來》！`,
+    files: [attachment]
+  });
+
 });
 
 client.login(process.env.TOKEN);
 
-/*require('dotenv').config();
-
-const {
-  Client,
-  GatewayIntentBits
-} = require('discord.js');
-
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers
-  ]
-});
-
-client.once('ready', () => {
-  console.log(`✅ 已登入 ${client.user.tag}`);
-});
-
-client.on('guildMemberAdd', member => {
-
-  const channel = member.guild.channels.cache.find(
-    ch => ch.name === '歡迎welcome'
-  );
-
-  if (!channel) return;
-
-  channel.send(
-`🏮 少俠 ${member} 已踏入燕雲江湖！
-
-願此行：
-不負俠義
-名動天下！`
-  );
-});
-
-client.login(process.env.TOKEN);*/
-
 /* RUN THIS IN TERMINAL TO PUSH TO GITHUB  
-git config --global user.email "kelvinkwh99@gmail.com"
-git add .                                                       
-git commit -m "first bot"
-git remote add origin https://github.com/kkwh99/hongxian-bot.git
-git branch -M main
-git push -u origin main
+git config --global user.email "kelvinkwh99@gmail.com" 
+git config --global user.name "Kelvin"
+git add .                 // (add all changes, change . to specific file if needed)
+git commit -m "first bot" // (commit changes, change message as needed)
+git remote add origin https://github.com/kkwh99/hongxian-bot.git // (only need to do this once)
+git branch -M main // change branch name to main (only need to do this once)
+git push -u origin main   // (push to github)
 
 */
