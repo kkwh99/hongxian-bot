@@ -95,7 +95,9 @@ client.on('guildMemberAdd', member => {
 client.login(process.env.TOKEN);*/
 
 /* RUN THIS IN TERMINAL TO PUSH TO GITHUB  
-
+git config --global user.email "kelvinkwh99@gmail.com"
+git add .                                                       
+git commit -m "first bot"
 git remote add origin https://github.com/kkwh99/hongxian-bot.git
 git branch -M main
 git push -u origin main
